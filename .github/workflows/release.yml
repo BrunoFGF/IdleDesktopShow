@@ -1,0 +1,31 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install AutoHotkey v2
+        run: choco install autohotkey --version=2.0.18 -y
+        shell: pwsh
+
+      - name: Compile
+        run: |
+          New-Item -ItemType Directory -Force -Path dist
+          & "C:\Program Files\AutoHotkey\Compiler\Ahk2Exe.exe" /in IdleDesktopShow.ahk /out dist\IdleDesktopShow.exe
+        shell: pwsh
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist\IdleDesktopShow.exe
+          generate_release_notes: true
