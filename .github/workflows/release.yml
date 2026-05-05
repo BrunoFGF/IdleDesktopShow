@@ -42,10 +42,18 @@ jobs:
           $base    = Get-ChildItem "C:\Program Files\AutoHotkey" -Recurse -Filter "AutoHotkey64.exe" | Select-Object -First 1 -ExpandProperty FullName
           if (-not $ahk2exe) { throw "Ahk2Exe.exe not found" }
           if (-not $base)    { throw "AutoHotkey64.exe not found" }
+          $script = Join-Path $PWD "IdleDesktopShow.ahk"
+          $out    = Join-Path $PWD "dist\IdleDesktopShow.exe"
           Write-Host "Compiler: $ahk2exe"
           Write-Host "Base:     $base"
-          & $ahk2exe /in IdleDesktopShow.ahk /out dist\IdleDesktopShow.exe /base $base
-          if (-not (Test-Path dist\IdleDesktopShow.exe)) { throw "Compile produced no output" }
+          Write-Host "Script:   $script"
+          $proc = Start-Process -FilePath $ahk2exe `
+            -ArgumentList "/in `"$script`" /out `"$out`" /base `"$base`"" `
+            -Wait -PassThru -NoNewWindow -RedirectStandardOutput compile_out.txt -RedirectStandardError compile_err.txt
+          if (Test-Path compile_out.txt) { Write-Host "STDOUT:"; Get-Content compile_out.txt }
+          if (Test-Path compile_err.txt) { Write-Host "STDERR:"; Get-Content compile_err.txt }
+          Write-Host "Exit code: $($proc.ExitCode)"
+          if (-not (Test-Path $out)) { throw "Compile produced no output" }
         shell: pwsh
 
       - name: Release
