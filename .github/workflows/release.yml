@@ -27,14 +27,25 @@ jobs:
           Expand-Archive Ahk2Exe.zip -DestinationPath C:\Ahk2Exe
         shell: pwsh
 
+      - name: Diagnose paths
+        run: |
+          Write-Host "=== AutoHotkey install ==="
+          Get-ChildItem "C:\Program Files\AutoHotkey" -Recurse | Select-Object -ExpandProperty FullName
+          Write-Host "=== Ahk2Exe zip contents ==="
+          Get-ChildItem C:\Ahk2Exe -Recurse | Select-Object -ExpandProperty FullName
+        shell: pwsh
+
       - name: Compile
         run: |
           New-Item -ItemType Directory -Force -Path dist
           $ahk2exe = Get-ChildItem C:\Ahk2Exe -Recurse -Filter "Ahk2Exe.exe" | Select-Object -First 1 -ExpandProperty FullName
-          $base    = "C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe"
+          $base    = Get-ChildItem "C:\Program Files\AutoHotkey" -Recurse -Filter "AutoHotkey64.exe" | Select-Object -First 1 -ExpandProperty FullName
+          if (-not $ahk2exe) { throw "Ahk2Exe.exe not found" }
+          if (-not $base)    { throw "AutoHotkey64.exe not found" }
           Write-Host "Compiler: $ahk2exe"
           Write-Host "Base:     $base"
           & $ahk2exe /in IdleDesktopShow.ahk /out dist\IdleDesktopShow.exe /base $base
+          if (-not (Test-Path dist\IdleDesktopShow.exe)) { throw "Compile produced no output" }
         shell: pwsh
 
       - name: Release
