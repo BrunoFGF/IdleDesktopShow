@@ -20,14 +20,21 @@ jobs:
 
       - name: Download Ahk2Exe
         run: |
-          Invoke-WebRequest "https://github.com/AutoHotkey/Ahk2Exe/releases/latest/download/Ahk2Exe.zip" -OutFile Ahk2Exe.zip
+          $release = Invoke-RestMethod "https://api.github.com/repos/AutoHotkey/Ahk2Exe/releases/latest"
+          $asset = $release.assets | Where-Object { $_.name -like "*.zip" } | Select-Object -First 1
+          Write-Host "Downloading $($asset.name) from $($asset.browser_download_url)"
+          Invoke-WebRequest $asset.browser_download_url -OutFile Ahk2Exe.zip
           Expand-Archive Ahk2Exe.zip -DestinationPath C:\Ahk2Exe
         shell: pwsh
 
       - name: Compile
         run: |
           New-Item -ItemType Directory -Force -Path dist
-          & "C:\Ahk2Exe\Ahk2Exe.exe" /in IdleDesktopShow.ahk /out dist\IdleDesktopShow.exe
+          $ahk2exe = Get-ChildItem C:\Ahk2Exe -Recurse -Filter "Ahk2Exe.exe" | Select-Object -First 1 -ExpandProperty FullName
+          $base    = "C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe"
+          Write-Host "Compiler: $ahk2exe"
+          Write-Host "Base:     $base"
+          & $ahk2exe /in IdleDesktopShow.ahk /out dist\IdleDesktopShow.exe /base $base
         shell: pwsh
 
       - name: Release
