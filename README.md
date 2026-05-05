@@ -36,10 +36,14 @@ Windows does have a screensaver, but it locks the screen — and that's not the 
 
 ### Download & use
 
-1. Install [AutoHotkey v2](https://www.autohotkey.com/download/)
-2. Download `IdleDesktopShow.ahk` from this repo
-3. Double-click `IdleDesktopShow.ahk` — a small icon appears in your system tray
-4. Right-click the icon → **Settings** to configure your idle time
+Go to the [**Releases**](../../releases/latest) page and download the file that works for you:
+
+| File | Requirements |
+|---|---|
+| `IdleDesktopShow.exe` | Nothing — just double-click |
+| `IdleDesktopShow.ahk` | [AutoHotkey v2](https://www.autohotkey.com/download/) installed |
+
+Once running, a small icon appears in your system tray. Right-click it → **Settings** to configure your idle time.
 
 ---
 
@@ -140,10 +144,14 @@ Windows tiene el protector de pantalla, pero bloquea la pantalla — y eso no es
 
 ### Descarga y uso
 
-1. Instala [AutoHotkey v2](https://www.autohotkey.com/download/)
-2. Descarga `IdleDesktopShow.ahk` de este repositorio
-3. Haz doble clic en `IdleDesktopShow.ahk` — aparece un ícono pequeño en la bandeja del sistema
-4. Clic derecho en el ícono → **Settings** para configurar el tiempo de inactividad
+Ve a la página de [**Releases**](../../releases/latest) y descargá el archivo que prefieras:
+
+| Archivo | Requisitos |
+|---|---|
+| `IdleDesktopShow.exe` | Ninguno — solo doble clic |
+| `IdleDesktopShow.ahk` | Tener [AutoHotkey v2](https://www.autohotkey.com/download/) instalado |
+
+Al ejecutarlo, aparece un ícono pequeño en la bandeja del sistema. Clic derecho → **Settings** para configurar el tiempo de inactividad.
 
 ---
 
