@@ -38,10 +38,10 @@ Windows does have a screensaver, but it locks the screen — and that's not the 
 
 Go to the [**Releases**](../../releases/latest) page and download the file that works for you:
 
-| File | Requirements |
-|---|---|
-| `IdleDesktopShow.exe` | Nothing — just double-click |
-| `IdleDesktopShow.ahk` | [AutoHotkey v2](https://www.autohotkey.com/download/) installed |
+| File | Requirements | When to choose |
+|---|---|---|
+| `IdleDesktopShow.exe` | Nothing — just double-click | Most users |
+| `IdleDesktopShow.ahk` | [AutoHotkey v2](https://www.autohotkey.com/download/) installed | If you want to inspect or modify the script before running it |
 
 Once running, a small icon appears in your system tray. Right-click it → **Settings** to configure your idle time.
 
@@ -146,10 +146,10 @@ Windows tiene el protector de pantalla, pero bloquea la pantalla — y eso no es
 
 Ve a la página de [**Releases**](../../releases/latest) y descargá el archivo que prefieras:
 
-| Archivo | Requisitos |
-|---|---|
-| `IdleDesktopShow.exe` | Ninguno — solo doble clic |
-| `IdleDesktopShow.ahk` | Tener [AutoHotkey v2](https://www.autohotkey.com/download/) instalado |
+| Archivo | Requisitos | Cuándo elegirlo |
+|---|---|---|
+| `IdleDesktopShow.exe` | Ninguno — solo doble clic | La mayoría de los usuarios |
+| `IdleDesktopShow.ahk` | Tener [AutoHotkey v2](https://www.autohotkey.com/download/) instalado | Si querés inspeccionar o modificar el script antes de ejecutarlo |
 
 Al ejecutarlo, aparece un ícono pequeño en la bandeja del sistema. Clic derecho → **Settings** para configurar el tiempo de inactividad.
 
