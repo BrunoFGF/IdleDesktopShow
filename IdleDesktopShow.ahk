@@ -33,7 +33,7 @@ global AUDIO_ONLY_APPS := Map(
 
 ; ── Constants ─────────────────────────────────────────────────────────────────
 global APP_NAME := "IdleDesktopShow"
-global APP_VER  := "1.0.2"
+global APP_VER  := "1.0.3"
 global CFG_FILE := A_AppData "\" APP_NAME "\config.ini"
 
 global SKIP_CLASSES := Map(
@@ -201,7 +201,7 @@ _IsMediaAppActive() {
                                     ObjRelease(pCtrl2)
                                     if pid {
                                         name := _ProcName(pid)
-                                        ComCall(9, pCtrl, "UInt*", &state := 0)
+                                        ComCall(3, pCtrl, "UInt*", &state := 0)
                                         ; Active session in MEDIA_APPS blocks even when silent
                                         ; (covers calls/meetings where no one is speaking)
                                         if state = 1 && MEDIA_APPS.Has(name)
