@@ -33,7 +33,7 @@ global AUDIO_ONLY_APPS := Map(
 
 ; ── Constants ─────────────────────────────────────────────────────────────────
 global APP_NAME := "IdleDesktopShow"
-global APP_VER  := "1.0.1"
+global APP_VER  := "1.0.2"
 global CFG_FILE := A_AppData "\" APP_NAME "\config.ini"
 
 global SKIP_CLASSES := Map(
@@ -178,51 +178,50 @@ _IsMediaAppActive() {
                     }
                 }
 
-                if peak > 0.001 {
-                    g1 := _GUID(_IID_ASManager2)
-                    ComCall(3, pDev, "Ptr", g1, "UInt", 23, "Ptr", 0, "Ptr*", &pMgr := 0)
-                    if pMgr {
-                        ComCall(5, pMgr, "Ptr*", &pSessEnum := 0)
-                        ObjRelease(pMgr)
-                        if pSessEnum {
-                            ComCall(3, pSessEnum, "Int*", &count := 0)
+                g1 := _GUID(_IID_ASManager2)
+                ComCall(3, pDev, "Ptr", g1, "UInt", 23, "Ptr", 0, "Ptr*", &pMgr := 0)
+                if pMgr {
+                    ComCall(5, pMgr, "Ptr*", &pSessEnum := 0)
+                    ObjRelease(pMgr)
+                    if pSessEnum {
+                        ComCall(3, pSessEnum, "Int*", &count := 0)
 
-                            hasMediaApp  := false
-                            hasAudioOnly := false
-                            loop count {
-                                ComCall(4, pSessEnum, "Int", A_Index - 1, "Ptr*", &pCtrl := 0)
-                                if !pCtrl
-                                    continue
-                                try {
-                                    g2 := _GUID(_IID_ASControl2)
-                                    pCtrl2 := 0
-                                    try ComCall(0, pCtrl, "Ptr", g2, "Ptr*", &pCtrl2)
-                                    if pCtrl2 {
-                                        ComCall(14, pCtrl2, "UInt*", &pid := 0)
-                                        ObjRelease(pCtrl2)
-                                        if pid {
-                                            name := _ProcName(pid)
-                                            ; Reliable path: session state says Active
-                                            ComCall(9, pCtrl, "UInt*", &state := 0)
-                                            if state = 1 && MEDIA_APPS.Has(name)
-                                                found := true
-                                            if MEDIA_APPS.Has(name)
-                                                hasMediaApp := true
-                                            if AUDIO_ONLY_APPS.Has(name)
-                                                hasAudioOnly := true
-                                        }
+                        hasMediaApp  := false
+                        hasAudioOnly := false
+                        loop count {
+                            ComCall(4, pSessEnum, "Int", A_Index - 1, "Ptr*", &pCtrl := 0)
+                            if !pCtrl
+                                continue
+                            try {
+                                g2 := _GUID(_IID_ASControl2)
+                                pCtrl2 := 0
+                                try ComCall(0, pCtrl, "Ptr", g2, "Ptr*", &pCtrl2)
+                                if pCtrl2 {
+                                    ComCall(14, pCtrl2, "UInt*", &pid := 0)
+                                    ObjRelease(pCtrl2)
+                                    if pid {
+                                        name := _ProcName(pid)
+                                        ComCall(9, pCtrl, "UInt*", &state := 0)
+                                        ; Active session in MEDIA_APPS blocks even when silent
+                                        ; (covers calls/meetings where no one is speaking)
+                                        if state = 1 && MEDIA_APPS.Has(name)
+                                            found := true
+                                        if MEDIA_APPS.Has(name)
+                                            hasMediaApp := true
+                                        if AUDIO_ONLY_APPS.Has(name)
+                                            hasAudioOnly := true
                                     }
                                 }
-                                ObjRelease(pCtrl)
                             }
-                            ObjRelease(pSessEnum)
-
-                            ; Bluetooth fallback: states are unreliable (all Inactive).
-                            ; Block only if a media app is present AND no audio-only app
-                            ; is on this endpoint that could explain the audio.
-                            if !found && hasMediaApp && !hasAudioOnly
-                                found := true
+                            ObjRelease(pCtrl)
                         }
+                        ObjRelease(pSessEnum)
+
+                        ; Bluetooth fallback: states are unreliable (all Inactive).
+                        ; Block only if there's actual audio AND a media app is present
+                        ; without an audio-only app explaining it.
+                        if !found && peak > 0.001 && hasMediaApp && !hasAudioOnly
+                            found := true
                     }
                 }
             }
