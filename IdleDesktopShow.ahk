@@ -33,7 +33,7 @@ global AUDIO_ONLY_APPS := Map(
 
 ; ── Constants ─────────────────────────────────────────────────────────────────
 global APP_NAME := "IdleDesktopShow"
-global APP_VER  := "1.0.0"
+global APP_VER  := "1.0.1"
 global CFG_FILE := A_AppData "\" APP_NAME "\config.ini"
 
 global SKIP_CLASSES := Map(
@@ -353,7 +353,7 @@ OpenSettings(*) {
     editList := customApps.Clone()
     lb := sg.Add("ListBox", "x22 y184 w198 h70")
     for app in editList
-        lb.Add(app)
+        lb.Add([app])
 
     sg.Add("Button", "x224 y184 w80 h24", "Remove").OnEvent("Click", RemoveApp)
 
@@ -383,7 +383,7 @@ OpenSettings(*) {
             if item = app
                 return
         editList.Push(app)
-        lb.Add(app)
+        lb.Add([app])
         addEdit.Value := ""
     }
 
